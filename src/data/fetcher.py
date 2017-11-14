@@ -37,10 +37,9 @@ class DatasetFetcher:
         prefix = ""
         if hq_files:
             prefix = "_hq"
-        files = ["train" + prefix + ".zip", "test" + prefix + ".zip", "metadata.csv.zip",
-                 "train_masks.csv.zip", "train_masks.zip"]
+        #files = ["train" + prefix + ".zip", "test" + prefix + ".zip", "metadata.csv.zip",
+        #         "train_masks.csv.zip", "train_masks.zip"]
         datasets_path = [destination_path + "train" + prefix, destination_path + "test" + prefix,
-                         destination_path + "metadata.csv", destination_path + "train_masks.csv",
                          destination_path + "train_masks"]
         is_datasets_present = True
 
@@ -64,7 +63,7 @@ class DatasetFetcher:
 
         self.train_data = datasets_path[0]
         self.test_data = datasets_path[1]
-        self.train_masks_data = datasets_path[4]
+        self.train_masks_data = datasets_path[2]
         self.train_files = sorted(os.listdir(self.train_data))
         self.test_files = sorted(os.listdir(self.test_data))
         self.train_masks_files = sorted(os.listdir(self.train_masks_data))
@@ -72,18 +71,16 @@ class DatasetFetcher:
 
     def get_car_image_files(self, car_image_id, test_file=False, get_mask=False):
         if get_mask:
-            if car_image_id + "_mask.gif" in self.train_masks_files:
-                return self.train_masks_data + "/" + car_image_id + "_mask.gif"
-            elif car_image_id + ".png" in self.train_masks_files:
-                return self.train_masks_data + "/" + car_image_id + ".png"
+            if car_image_id + "_GTC_BW.tif" in self.train_masks_files:
+                return self.train_masks_data + "/" + car_image_id + "_GTC_BW.tif"
             else:
                 raise Exception("No mask with this ID found")
         elif test_file:
-            if car_image_id + ".jpg" in self.test_files:
-                return self.test_data + "/" + car_image_id + ".jpg"
+            if car_image_id + "_RGB.tif" in self.test_files:
+                return self.test_data + "/" + car_image_id + "_RGB.tif"
         else:
-            if car_image_id + ".jpg" in self.train_files:
-                return self.train_data + "/" + car_image_id + ".jpg"
+            if car_image_id + "_RGB.tif" in self.train_files:
+                return self.train_data + "/" + car_image_id + "_RGB.tif"
         raise Exception("No image with this ID found")
 
     def get_image_matrix(self, image_path):
@@ -109,7 +106,7 @@ class DatasetFetcher:
                 Returns the dataset in the form:
                 [train_data, train_masks_data, valid_data, valid_masks_data]
         """
-        train_ids = list(map(lambda img: img.split(".")[0], self.train_files))
+        train_ids = list(map(lambda img: img.split("_RGB.tif")[0], self.train_files))
 
         # Each id has 16 images but well...
         if sample_size:

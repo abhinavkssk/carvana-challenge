@@ -23,7 +23,7 @@ def main():
     helpers.clear_logs_folder()
 
     # Hyperparameters
-    img_resize = (1024, 1024)
+    img_resize = (2048, 2048)
     batch_size = 10
     epochs = 50
     threshold = 0.5
