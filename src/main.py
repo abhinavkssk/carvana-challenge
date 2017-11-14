@@ -8,7 +8,6 @@ from torch.utils.data.sampler import RandomSampler, SequentialSampler
 
 import img.augmentation as aug
 from data.fetcher import DatasetFetcher
-import nn.classifier
 from nn.train_callbacks import TensorboardVisualizerCallback, TensorboardLoggerCallback, ModelSaverCallback
 from nn.test_callbacks import PredictionsSaverCallback
 
@@ -25,7 +24,7 @@ def main():
 
     # Hyperparameters
     img_resize = (1024, 1024)
-    batch_size = 2
+    batch_size = 10
     epochs = 50
     threshold = 0.5
     validation_size = 0.2
@@ -63,6 +62,7 @@ def main():
 
     # Define our neural net architecture
     net = unet.UNet1024((3, *img_resize_centercrop))
+    net = torch.nn.DataParallel(net, device_ids=[0, 1]).cuda()
     classifier = nn.classifier.CarvanaClassifier(net, epochs)
 
     train_ds = TrainImageDataset(X_train, y_train, img_resize, X_transform=aug.augment_img)

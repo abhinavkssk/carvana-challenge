@@ -20,7 +20,7 @@ class DatasetFetcher:
         self.test_files = None
         self.train_masks_files = None
 
-    def download_dataset(self, hq_files=True):
+    def download_dataset(self, hq_files=False):
         """
         Downloads the dataset and return the input paths
         Args:
@@ -47,6 +47,7 @@ class DatasetFetcher:
         # If the folders already exists then the files may already be extracted
         # This is a bit hacky but it's sufficient for our needs
         for dir_path in datasets_path:
+            print(dir_path)
             if not os.path.exists(dir_path):
                 is_datasets_present = False
 
